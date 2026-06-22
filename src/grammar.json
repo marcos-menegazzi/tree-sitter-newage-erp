@@ -26,6 +26,10 @@
           },
           {
             "type": "SYMBOL",
+            "name": "field_access"
+          },
+          {
+            "type": "SYMBOL",
             "name": "if_opener"
           },
           {
@@ -79,6 +83,10 @@
           {
             "type": "SYMBOL",
             "name": "operator"
+          },
+          {
+            "type": "STRING",
+            "value": "->"
           },
           {
             "type": "SYMBOL",
@@ -227,6 +235,31 @@
         {
           "type": "SYMBOL",
           "name": "param_keyword"
+        }
+      ]
+    },
+    "field_access": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "FIELD",
+          "name": "object",
+          "content": {
+            "type": "SYMBOL",
+            "name": "identifier"
+          }
+        },
+        {
+          "type": "STRING",
+          "value": "->"
+        },
+        {
+          "type": "FIELD",
+          "name": "field",
+          "content": {
+            "type": "SYMBOL",
+            "name": "identifier"
+          }
         }
       ]
     },
@@ -671,10 +704,6 @@
           },
           {
             "type": "STRING",
-            "value": "->"
-          },
-          {
-            "type": "STRING",
             "value": "<="
           },
           {
@@ -799,7 +828,12 @@
       "value": "[ \\t\\f]+"
     }
   ],
-  "conflicts": [],
+  "conflicts": [
+    [
+      "source_file",
+      "field_access"
+    ]
+  ],
   "precedences": [],
   "externals": [],
   "inline": [],

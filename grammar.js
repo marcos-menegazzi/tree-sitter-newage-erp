@@ -8,12 +8,17 @@ module.exports = grammar({
 
   word: ($) => $.identifier,
 
+  conflicts: ($) => [
+    [$.source_file, $.field_access]
+  ],
+
   rules: {
     source_file: ($) => repeat(choice(
       $.function_definition,
       $.procedure_definition,
       $.method_definition,
       $.declaration_statement,
+      $.field_access,
       $.if_opener,
       $.do_while_opener,
       $.for_opener,
@@ -28,6 +33,7 @@ module.exports = grammar({
       $.nil,
       $.identifier,
       $.operator,
+      "->",
       $.punctuation,
       $.newline
     )),
@@ -58,6 +64,17 @@ module.exports = grammar({
       $.private_keyword,
       $.public_keyword,
       $.param_keyword
+    ),
+
+    // Alias->field access (e.g. PAGREC->LOCAL). Modeled explicitly so that
+    // the field name is parsed as a plain identifier instead of being
+    // mistaken for the start of a new declaration_statement, which would
+    // otherwise happen for reserved words like LOCAL/PRIVATE/PUBLIC/PARAM
+    // since the grammar has no statement boundaries to rule that out.
+    field_access: ($) => seq(
+      field("object", $.identifier),
+      "->",
+      field("field", $.identifier)
     ),
 
     if_opener: ($) => $.if_keyword,
@@ -106,7 +123,6 @@ module.exports = grammar({
     )),
     operator: (_) => token(choice(
       ":=",
-      "->",
       "<=",
       ">=",
       "<>",
