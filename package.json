@@ -1,0 +1,10 @@
+{
+  "name": "tree-sitter-newage-erp",
+  "version": "0.0.1",
+  "description": "Tree-sitter grammar for NewAge ERP xHarbour sources.",
+  "main": "grammar.js",
+  "license": "MIT",
+  "devDependencies": {
+    "tree-sitter-cli": "^0.24.0"
+  }
+}

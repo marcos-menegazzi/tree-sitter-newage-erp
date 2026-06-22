@@ -1,0 +1,114 @@
+const word = (value) => token(prec(2, new RegExp(value.split("").map((ch) => `[${ch.toLowerCase()}${ch.toUpperCase()}]`).join(""))));
+
+module.exports = grammar({
+  name: "newage_erp",
+
+  extras: ($) => [/[ \t\f]+/],
+
+  word: ($) => $.identifier,
+
+  rules: {
+    source_file: ($) => repeat(choice(
+      $.function_definition,
+      $.procedure_definition,
+      $.method_definition,
+      $.if_opener,
+      $.do_while_opener,
+      $.for_opener,
+      $.endif,
+      $.enddo,
+      $.next,
+      $.call,
+      $.comment,
+      $.string,
+      $.number,
+      $.boolean,
+      $.nil,
+      $.identifier,
+      $.operator,
+      $.punctuation,
+      $.newline
+    )),
+
+    function_definition: ($) => seq(
+      optional(choice($.static_modifier, $.user_modifier)),
+      $.function_keyword,
+      field("name", $.identifier)
+    ),
+
+    procedure_definition: ($) => seq(
+      $.procedure_keyword,
+      field("name", $.identifier)
+    ),
+
+    method_definition: ($) => seq(
+      $.method_keyword,
+      field("name", $.identifier)
+    ),
+
+    if_opener: ($) => $.if_keyword,
+    do_while_opener: ($) => seq($.do_keyword, $.while_keyword),
+    for_opener: ($) => $.for_keyword,
+    endif: ($) => $.endif_keyword,
+    enddo: ($) => $.enddo_keyword,
+    next: ($) => $.next_keyword,
+
+    call: ($) => prec(1, seq(
+      field("function", $.identifier),
+      "(",
+      repeat(choice($.string, $.number, $.boolean, $.nil, $.identifier, $.operator, $.punctuation, $.newline)),
+      ")"
+    )),
+
+    static_modifier: (_) => word("static"),
+    user_modifier: (_) => word("user"),
+    function_keyword: (_) => word("function"),
+    procedure_keyword: (_) => word("procedure"),
+    method_keyword: (_) => word("method"),
+    if_keyword: (_) => word("if"),
+    do_keyword: (_) => word("do"),
+    while_keyword: (_) => word("while"),
+    for_keyword: (_) => word("for"),
+    endif_keyword: (_) => word("endif"),
+    enddo_keyword: (_) => word("enddo"),
+    next_keyword: (_) => word("next"),
+
+    boolean: (_) => token(prec(2, choice(/\.[tT]\./, /\.[fF]\./, word("true"), word("false"), word("t"), word("f")))),
+    nil: (_) => token(prec(2, word("nil"))),
+    identifier: (_) => /[A-Za-z_][A-Za-z0-9_]*/,
+    number: (_) => /\d+(\.\d+)?/,
+    string: (_) => choice(
+      seq("'", repeat(choice(/[^'\r\n]+/, "''")), "'"),
+      seq("\"", repeat(choice(/[^"\r\n]+/, "\"\"")), "\"")
+    ),
+    comment: (_) => token(choice(
+      seq("//", /[^\r\n]*/),
+      seq("&&", /[^\r\n]*/),
+      seq(/\*{2,}/, /[^\r\n]*/)
+    )),
+    operator: (_) => token(choice(
+      ":=",
+      "->",
+      "<=",
+      ">=",
+      "<>",
+      "!=",
+      "==",
+      /\.[aA][nN][dD]\./,
+      /\.[oO][rR]\./,
+      /\.[nN][oO][tT]\./,
+      "+",
+      "-",
+      "*",
+      "/",
+      "%",
+      "=",
+      "<",
+      ">",
+      ":",
+      "."
+    )),
+    punctuation: (_) => token(choice(",", ";", "(", ")", "[", "]", "{", "}")),
+    newline: (_) => /\r?\n/,
+  },
+});

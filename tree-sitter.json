@@ -1,0 +1,30 @@
+{
+  "grammars": [
+    {
+      "name": "newage_erp",
+      "camelcase": "NewageErp",
+      "scope": "source.newage_erp",
+      "path": ".",
+      "file-types": [
+        "prg",
+        "prc"
+      ]
+    }
+  ],
+  "metadata": {
+    "version": "0.0.1",
+    "license": "MIT",
+    "description": "Tree-sitter grammar for NewAge ERP xHarbour sources.",
+    "links": {
+      "repository": "https://example.com/tree-sitter-newage-erp"
+    }
+  },
+  "bindings": {
+    "c": true,
+    "go": true,
+    "node": true,
+    "python": true,
+    "rust": true,
+    "swift": true
+  }
+}
