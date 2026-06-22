@@ -1,4 +1,5 @@
 const word = (value) => token(prec(2, new RegExp(value.split("").map((ch) => `[${ch.toLowerCase()}${ch.toUpperCase()}]`).join(""))));
+const commaSep1 = (rule) => seq(rule, repeat(seq(",", rule)));
 
 module.exports = grammar({
   name: "newage_erp",
@@ -12,6 +13,7 @@ module.exports = grammar({
       $.function_definition,
       $.procedure_definition,
       $.method_definition,
+      $.declaration_statement,
       $.if_opener,
       $.do_while_opener,
       $.for_opener,
@@ -46,6 +48,18 @@ module.exports = grammar({
       field("name", $.identifier)
     ),
 
+    declaration_statement: ($) => seq(
+      field("kind", $.declaration_keyword),
+      commaSep1(field("name", $.identifier))
+    ),
+
+    declaration_keyword: ($) => choice(
+      $.local_keyword,
+      $.private_keyword,
+      $.public_keyword,
+      $.param_keyword
+    ),
+
     if_opener: ($) => $.if_keyword,
     do_while_opener: ($) => seq($.do_keyword, $.while_keyword),
     for_opener: ($) => $.for_keyword,
@@ -65,6 +79,10 @@ module.exports = grammar({
     function_keyword: (_) => word("function"),
     procedure_keyword: (_) => word("procedure"),
     method_keyword: (_) => word("method"),
+    local_keyword: (_) => word("local"),
+    private_keyword: (_) => word("private"),
+    public_keyword: (_) => word("public"),
+    param_keyword: (_) => word("param"),
     if_keyword: (_) => word("if"),
     do_keyword: (_) => word("do"),
     while_keyword: (_) => word("while"),
@@ -73,7 +91,7 @@ module.exports = grammar({
     enddo_keyword: (_) => word("enddo"),
     next_keyword: (_) => word("next"),
 
-    boolean: (_) => token(prec(2, choice(/\.[tT]\./, /\.[fF]\./, word("true"), word("false"), word("t"), word("f")))),
+    boolean: (_) => token(prec(2, choice(/\.[tT]\./, /\.[fF]\./))),
     nil: (_) => token(prec(2, word("nil"))),
     identifier: (_) => /[A-Za-z_][A-Za-z0-9_]*/,
     number: (_) => /\d+(\.\d+)?/,

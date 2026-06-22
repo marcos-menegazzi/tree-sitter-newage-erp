@@ -22,6 +22,10 @@
           },
           {
             "type": "SYMBOL",
+            "name": "declaration_statement"
+          },
+          {
+            "type": "SYMBOL",
             "name": "if_opener"
           },
           {
@@ -156,6 +160,73 @@
             "type": "SYMBOL",
             "name": "identifier"
           }
+        }
+      ]
+    },
+    "declaration_statement": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "FIELD",
+          "name": "kind",
+          "content": {
+            "type": "SYMBOL",
+            "name": "declaration_keyword"
+          }
+        },
+        {
+          "type": "SEQ",
+          "members": [
+            {
+              "type": "FIELD",
+              "name": "name",
+              "content": {
+                "type": "SYMBOL",
+                "name": "identifier"
+              }
+            },
+            {
+              "type": "REPEAT",
+              "content": {
+                "type": "SEQ",
+                "members": [
+                  {
+                    "type": "STRING",
+                    "value": ","
+                  },
+                  {
+                    "type": "FIELD",
+                    "name": "name",
+                    "content": {
+                      "type": "SYMBOL",
+                      "name": "identifier"
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "declaration_keyword": {
+      "type": "CHOICE",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "local_keyword"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "private_keyword"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "public_keyword"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "param_keyword"
         }
       ]
     },
@@ -312,6 +383,50 @@
         }
       }
     },
+    "local_keyword": {
+      "type": "TOKEN",
+      "content": {
+        "type": "PREC",
+        "value": 2,
+        "content": {
+          "type": "PATTERN",
+          "value": "[lL][oO][cC][aA][lL]"
+        }
+      }
+    },
+    "private_keyword": {
+      "type": "TOKEN",
+      "content": {
+        "type": "PREC",
+        "value": 2,
+        "content": {
+          "type": "PATTERN",
+          "value": "[pP][rR][iI][vV][aA][tT][eE]"
+        }
+      }
+    },
+    "public_keyword": {
+      "type": "TOKEN",
+      "content": {
+        "type": "PREC",
+        "value": 2,
+        "content": {
+          "type": "PATTERN",
+          "value": "[pP][uU][bB][lL][iI][cC]"
+        }
+      }
+    },
+    "param_keyword": {
+      "type": "TOKEN",
+      "content": {
+        "type": "PREC",
+        "value": 2,
+        "content": {
+          "type": "PATTERN",
+          "value": "[pP][aA][rR][aA][mM]"
+        }
+      }
+    },
     "if_keyword": {
       "type": "TOKEN",
       "content": {
@@ -404,50 +519,6 @@
             {
               "type": "PATTERN",
               "value": "\\.[fF]\\."
-            },
-            {
-              "type": "TOKEN",
-              "content": {
-                "type": "PREC",
-                "value": 2,
-                "content": {
-                  "type": "PATTERN",
-                  "value": "[tT][rR][uU][eE]"
-                }
-              }
-            },
-            {
-              "type": "TOKEN",
-              "content": {
-                "type": "PREC",
-                "value": 2,
-                "content": {
-                  "type": "PATTERN",
-                  "value": "[fF][aA][lL][sS][eE]"
-                }
-              }
-            },
-            {
-              "type": "TOKEN",
-              "content": {
-                "type": "PREC",
-                "value": 2,
-                "content": {
-                  "type": "PATTERN",
-                  "value": "[tT]"
-                }
-              }
-            },
-            {
-              "type": "TOKEN",
-              "content": {
-                "type": "PREC",
-                "value": 2,
-                "content": {
-                  "type": "PATTERN",
-                  "value": "[fF]"
-                }
-              }
             }
           ]
         }
