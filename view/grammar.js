@@ -17,15 +17,16 @@ module.exports = grammar({
 
   extras: ($) => [/\s+/, $.comment],
 
+  word: ($) => $.identifier,
+
   rules: {
-    source_file: ($) => seq(
-      repeat(choice(
-        $.table_declaration,
-        $.exec_view,
-        $.bind_declaration
-      )),
-      repeat($._sql_item)
-    ),
+    // Lista plana: uma linha de cabeçalho fora do formato não apaga o destaque das seguintes.
+    source_file: ($) => repeat(choice(
+      $.table_declaration,
+      $.exec_view,
+      $.bind_declaration,
+      $._sql_item
+    )),
 
     table_declaration: ($) => seq(
       $.table_keyword,
@@ -36,9 +37,12 @@ module.exports = grammar({
     exec_view: ($) => seq(
       $.exec_view_keyword,
       "(",
-      field("name", $.string),
+      field("name", $._exec_view_argument),
+      repeat(seq(",", $._exec_view_argument)),
       ")"
     ),
+
+    _exec_view_argument: ($) => choice($.string, alias($.quoted_identifier, $.string)),
 
     bind_declaration: ($) => seq(
       $.bindvar_keyword,
@@ -79,8 +83,9 @@ module.exports = grammar({
 
     _xharbour_text: (_) => /[^()'"\s]+/,
 
+    // `TABLE(` do Oracle é chamada, não declaração de cabeçalho.
     call: ($) => seq(
-      field("function", $.identifier),
+      field("function", choice($.identifier, alias($.table_keyword, $.identifier))),
       token.immediate("(")
     ),
 

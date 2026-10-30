@@ -71,3 +71,45 @@ select a.b from <A>
     column: (identifier))
   (keyword)
   (table_placeholder))
+
+==================
+exec view with double quotes and arguments
+==================
+
+ExecView("FILTRO_TESTE", 'X')
+BindVar nX
+
+---
+
+(source_file
+  (exec_view
+    (exec_view_keyword)
+    name: (string)
+    (string))
+  (bind_declaration
+    (bindvar_keyword)
+    name: (identifier)))
+
+==================
+header line with extra token keeps later header
+==================
+
+Table A INVENTARIO X
+Table B EMPRESAS
+BindVar nX
+
+---
+
+(source_file
+  (table_declaration
+    (table_keyword)
+    alias: (identifier)
+    name: (identifier))
+  (identifier)
+  (table_declaration
+    (table_keyword)
+    alias: (identifier)
+    name: (identifier))
+  (bind_declaration
+    (bindvar_keyword)
+    name: (identifier)))

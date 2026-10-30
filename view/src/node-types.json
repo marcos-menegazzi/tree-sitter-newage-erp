@@ -57,11 +57,15 @@
       }
     },
     "children": {
-      "multiple": false,
+      "multiple": true,
       "required": true,
       "types": [
         {
           "type": "exec_view_keyword",
+          "named": true
+        },
+        {
+          "type": "string",
           "named": true
         }
       ]
@@ -183,6 +187,11 @@
         }
       ]
     }
+  },
+  {
+    "type": "string",
+    "named": true,
+    "fields": {}
   },
   {
     "type": "table_declaration",
@@ -363,10 +372,6 @@
   },
   {
     "type": "number",
-    "named": true
-  },
-  {
-    "type": "string",
     "named": true
   },
   {

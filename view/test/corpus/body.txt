@@ -167,3 +167,58 @@ SELECT /*+ INDEX(A) */ A.X FROM <A> CONNECT BY PRIOR A.X = A.Y MERGE
     table: (identifier)
     column: (identifier))
   (identifier))
+
+==================
+identifiers starting with keywords
+==================
+
+SELECT A.X AS ENDERECO, NULLIF(a, b), IFNULL(c), ORIGEM FROM INVENTARIO
+
+---
+
+(source_file
+  (keyword)
+  (qualified_name
+    table: (identifier)
+    column: (identifier))
+  (keyword)
+  (identifier)
+  (punctuation)
+  (call
+    function: (identifier))
+  (identifier)
+  (punctuation)
+  (identifier)
+  (punctuation)
+  (punctuation)
+  (call
+    function: (identifier))
+  (identifier)
+  (punctuation)
+  (punctuation)
+  (identifier)
+  (keyword)
+  (identifier))
+
+==================
+oracle table function is a call
+==================
+
+SELECT T.X FROM TABLE(F(1)) T
+
+---
+
+(source_file
+  (keyword)
+  (qualified_name
+    table: (identifier)
+    column: (identifier))
+  (keyword)
+  (call
+    function: (identifier))
+  (call
+    function: (identifier))
+  (number)
+  (punctuation)
+  (punctuation)
+  (identifier))

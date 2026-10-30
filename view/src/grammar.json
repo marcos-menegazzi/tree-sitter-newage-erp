@@ -1,38 +1,31 @@
 {
   "$schema": "https://tree-sitter.github.io/tree-sitter/assets/schemas/grammar.schema.json",
   "name": "newage_view",
+  "word": "identifier",
   "rules": {
     "source_file": {
-      "type": "SEQ",
-      "members": [
-        {
-          "type": "REPEAT",
-          "content": {
-            "type": "CHOICE",
-            "members": [
-              {
-                "type": "SYMBOL",
-                "name": "table_declaration"
-              },
-              {
-                "type": "SYMBOL",
-                "name": "exec_view"
-              },
-              {
-                "type": "SYMBOL",
-                "name": "bind_declaration"
-              }
-            ]
-          }
-        },
-        {
-          "type": "REPEAT",
-          "content": {
+      "type": "REPEAT",
+      "content": {
+        "type": "CHOICE",
+        "members": [
+          {
+            "type": "SYMBOL",
+            "name": "table_declaration"
+          },
+          {
+            "type": "SYMBOL",
+            "name": "exec_view"
+          },
+          {
+            "type": "SYMBOL",
+            "name": "bind_declaration"
+          },
+          {
             "type": "SYMBOL",
             "name": "_sql_item"
           }
-        }
-      ]
+        ]
+      }
     },
     "table_declaration": {
       "type": "SEQ",
@@ -75,12 +68,46 @@
           "name": "name",
           "content": {
             "type": "SYMBOL",
-            "name": "string"
+            "name": "_exec_view_argument"
+          }
+        },
+        {
+          "type": "REPEAT",
+          "content": {
+            "type": "SEQ",
+            "members": [
+              {
+                "type": "STRING",
+                "value": ","
+              },
+              {
+                "type": "SYMBOL",
+                "name": "_exec_view_argument"
+              }
+            ]
           }
         },
         {
           "type": "STRING",
           "value": ")"
+        }
+      ]
+    },
+    "_exec_view_argument": {
+      "type": "CHOICE",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "string"
+        },
+        {
+          "type": "ALIAS",
+          "content": {
+            "type": "SYMBOL",
+            "name": "quoted_identifier"
+          },
+          "named": true,
+          "value": "string"
         }
       ]
     },
@@ -242,8 +269,22 @@
           "type": "FIELD",
           "name": "function",
           "content": {
-            "type": "SYMBOL",
-            "name": "identifier"
+            "type": "CHOICE",
+            "members": [
+              {
+                "type": "SYMBOL",
+                "name": "identifier"
+              },
+              {
+                "type": "ALIAS",
+                "content": {
+                  "type": "SYMBOL",
+                  "name": "table_keyword"
+                },
+                "named": true,
+                "value": "identifier"
+              }
+            ]
           }
         },
         {
