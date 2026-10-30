@@ -9,6 +9,15 @@
         "prg",
         "prc"
       ]
+    },
+    {
+      "name": "newage_view",
+      "camelcase": "NewageView",
+      "scope": "source.newage_view",
+      "path": "view",
+      "file-types": [
+        "SQL"
+      ]
     }
   ],
   "metadata": {

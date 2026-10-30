@@ -1,0 +1,169 @@
+==================
+query without header
+==================
+
+SELECT A.CODIGO, COUNT(*) FROM <A> WHERE A.X = 1
+
+---
+
+(source_file
+  (keyword)
+  (qualified_name
+    table: (identifier)
+    column: (identifier))
+  (punctuation)
+  (call
+    function: (identifier))
+  (operator)
+  (punctuation)
+  (keyword)
+  (table_placeholder)
+  (keyword)
+  (qualified_name
+    table: (identifier)
+    column: (identifier))
+  (operator)
+  (number))
+
+==================
+comparison operators are not placeholders
+==================
+
+WHERE A.X < 10 AND A.Y<>B.Y AND A.Z <= 3
+
+---
+
+(source_file
+  (keyword)
+  (qualified_name
+    table: (identifier)
+    column: (identifier))
+  (operator)
+  (number)
+  (keyword)
+  (qualified_name
+    table: (identifier)
+    column: (identifier))
+  (operator)
+  (qualified_name
+    table: (identifier)
+    column: (identifier))
+  (keyword)
+  (qualified_name
+    table: (identifier)
+    column: (identifier))
+  (operator)
+  (number))
+
+==================
+nested xharbour expression
+==================
+
+WHERE 1 = 1 If(Empty(x), "a (b)", "")
+ORDER BY A.X
+
+---
+
+(source_file
+  (keyword)
+  (number)
+  (operator)
+  (number)
+  (xharbour_expression
+    function: (xharbour_function)
+    (xharbour_group)
+    (string)
+    (string))
+  (keyword)
+  (keyword)
+  (qualified_name
+    table: (identifier)
+    column: (identifier)))
+
+==================
+iif with bind variable
+==================
+
+IIf(VW1 = 'S', "and 1 = 2", "")
+
+---
+
+(source_file
+  (xharbour_expression
+    function: (xharbour_function)
+    (string)
+    (string)
+    (string)))
+
+==================
+bind reference
+==================
+
+A.CODIGO :nTeste
+
+---
+
+(source_file
+  (qualified_name
+    table: (identifier)
+    column: (identifier))
+  (bind_reference))
+
+==================
+strings and quoted identifiers
+==================
+
+SELECT 'it''s', "Col" FROM <A>
+
+---
+
+(source_file
+  (keyword)
+  (string)
+  (punctuation)
+  (quoted_identifier)
+  (keyword)
+  (table_placeholder))
+
+==================
+comments
+==================
+
+-- linha
+SELECT /* bloco */ 1
+
+---
+
+(source_file
+  (comment)
+  (keyword)
+  (comment)
+  (number))
+
+==================
+unknown sql stays tolerant
+==================
+
+SELECT /*+ INDEX(A) */ A.X FROM <A> CONNECT BY PRIOR A.X = A.Y MERGE
+
+---
+
+(source_file
+  (keyword)
+  (comment)
+  (qualified_name
+    table: (identifier)
+    column: (identifier))
+  (keyword)
+  (table_placeholder)
+  (keyword)
+  (keyword)
+  (keyword)
+  (qualified_name
+    table: (identifier)
+    column: (identifier))
+  (operator)
+  (qualified_name
+    table: (identifier)
+    column: (identifier))
+  (identifier))

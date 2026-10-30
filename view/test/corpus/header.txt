@@ -1,0 +1,73 @@
+==================
+table declarations
+==================
+
+Table A INVENTARIO
+Table B EMPRESAS
+
+---
+
+(source_file
+  (table_declaration
+    (table_keyword)
+    alias: (identifier)
+    name: (identifier))
+  (table_declaration
+    (table_keyword)
+    alias: (identifier)
+    name: (identifier)))
+
+==================
+exec view
+==================
+
+ExecView('FILTRO_TESTE')
+
+---
+
+(source_file
+  (exec_view
+    (exec_view_keyword)
+    name: (string)))
+
+==================
+bind declarations
+==================
+
+BindVar nTeste
+BindVar VW1
+
+---
+
+(source_file
+  (bind_declaration
+    (bindvar_keyword)
+    name: (identifier))
+  (bind_declaration
+    (bindvar_keyword)
+    name: (identifier)))
+
+==================
+keywords are case-insensitive
+==================
+
+table a x
+bindvar y
+select a.b from <A>
+
+---
+
+(source_file
+  (table_declaration
+    (table_keyword)
+    alias: (identifier)
+    name: (identifier))
+  (bind_declaration
+    (bindvar_keyword)
+    name: (identifier))
+  (keyword)
+  (qualified_name
+    table: (identifier)
+    column: (identifier))
+  (keyword)
+  (table_placeholder))
