@@ -26,6 +26,9 @@ module.exports = grammar({
       $.enddo,
       $.next,
       $.call,
+      $.parenthesized_expression,
+      $.subscript_expression,
+      $.brace_expression,
       $.comment,
       $.string,
       $.number,
@@ -71,11 +74,11 @@ module.exports = grammar({
     // mistaken for the start of a new declaration_statement, which would
     // otherwise happen for reserved words like LOCAL/PRIVATE/PUBLIC/PARAM
     // since the grammar has no statement boundaries to rule that out.
-    field_access: ($) => seq(
+    field_access: ($) => prec(2, seq(
       field("object", $.identifier),
       "->",
       field("field", $.identifier)
-    ),
+    )),
 
     if_opener: ($) => $.if_keyword,
     do_while_opener: ($) => seq($.do_keyword, $.while_keyword),
@@ -86,10 +89,44 @@ module.exports = grammar({
 
     call: ($) => prec(1, seq(
       field("function", $.identifier),
-      "(",
-      repeat(choice($.string, $.number, $.boolean, $.nil, $.identifier, $.operator, $.punctuation, $.newline)),
-      ")"
+      field("arguments", $.parenthesized_expression)
     )),
+
+    parenthesized_expression: ($) => seq(
+      "(",
+      repeat($._expression_item),
+      ")"
+    ),
+
+    subscript_expression: ($) => seq(
+      "[",
+      repeat($._expression_item),
+      "]"
+    ),
+
+    brace_expression: ($) => seq(
+      "{",
+      repeat($._expression_item),
+      "}"
+    ),
+
+    _expression_item: ($) => choice(
+      $.call,
+      $.parenthesized_expression,
+      $.subscript_expression,
+      $.brace_expression,
+      $.field_access,
+      $.comment,
+      $.string,
+      $.number,
+      $.boolean,
+      $.nil,
+      $.identifier,
+      $.operator,
+      "->",
+      $.punctuation,
+      $.newline
+    ),
 
     static_modifier: (_) => word("static"),
     user_modifier: (_) => word("user"),
@@ -127,6 +164,7 @@ module.exports = grammar({
       ">=",
       "<>",
       "!=",
+      "!",
       "==",
       /\.[aA][nN][dD]\./,
       /\.[oO][rR]\./,
@@ -142,7 +180,7 @@ module.exports = grammar({
       ":",
       "."
     )),
-    punctuation: (_) => token(choice(",", ";", "(", ")", "[", "]", "{", "}")),
+    punctuation: (_) => token(choice(",", ";")),
     newline: (_) => /\r?\n/,
   },
 });
